@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Function to display DNS record information
+display_dns_info() {
+    local domain="$1"
+    local subdomain="$2"
+    local dig_output
+
+    if [ -z "$subdomain" ]; then
+        # When only the domain is provided, query for www, lb-01, web-01, and web-02
+        subdomains=("www" "lb-01" "web-01" "web-02")
+    else
+        subdomains=("$subdomain")
+    fi
+
+    for sub in "${subdomains[@]}"; do
+        dig_output=$(dig "$sub.$domain" +short)
+        record_type=$(dig "$sub.$domain" +short -t ANY)
+        if [ -n "$dig_output" ]; then
+            echo "The subdomain $sub is a $record_type record and points to $dig_output"
+        else
+            echo "No DNS record found for subdomain $sub"
+        fi
+    done
+}
+
+# Check if domain and subdomain are provided as arguments
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <domain> [subdomain]"
+    exit 1
+fi
+
+domain="$1"
+subdomain="$2"
+
+# Call the function to display DNS information
+display_dns_info "$domain" "$subdomain"
