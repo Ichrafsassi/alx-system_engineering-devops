@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-
 # Function to display DNS record information
+
 display_dns_info() {
     local domain="$1"
     local subdomain="$2"
     local dig_output
 
     if [ -z "$subdomain" ]; then
-        # When only the domain is provided, query for www, lb-01, web-01, and web-02
+	# When only the domain is provided, query for www, lb-01, web-01, and web-02
         subdomains=("www" "lb-01" "web-01" "web-02")
     else
         subdomains=("$subdomain")
